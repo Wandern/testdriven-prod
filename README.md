@@ -10,3 +10,10 @@ TODO:
 ** Unknown automationss
 - Sphynx/readthedocs documentation/automation
 - Add Documentation for setting up the template/project with Travis CI
+
+
+In terms of workflow, for now, while the project structure is still somewhat simple, we'll:
+
+1. Code a new feature locally
+2. Commit and push code
+3. Ensure tests pass on Travis
