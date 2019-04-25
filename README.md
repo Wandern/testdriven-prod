@@ -1,6 +1,6 @@
 # Microservices with Docker, Flask, and React
 
-[![Build Status](https://travis-ci.org/Wandern/testdriven-app.svg?branch=master)](https://travis-ci.org/Wandern/testdriven-app)
+[![Build Status](https://travis-ci.org/Wandern/testdriven-prod.svg?branch=master)](https://travis-ci.org/Wandern/testdriven-prod)
 
 TODO:
 - Add automation for Black and Flake8 in Manage.py as a part of the push/merge/testing process
