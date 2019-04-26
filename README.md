@@ -10,6 +10,7 @@ TODO:
 ** Unknown automationss
 - Sphynx/readthedocs documentation/automation
 - Add Documentation for setting up the template/project with Travis CI
+- Staging ENvironment needed to keep Travis working as expected.
 
 
 In terms of workflow, for now, while the project structure is still somewhat simple, we'll:
