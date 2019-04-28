@@ -25,6 +25,7 @@ class TestDevelopmentConfig(TestCase):
         self.assertFalse(app.config["TESTING"])
         self.assertFalse(app.config["SQLALCHEMY_TRACK_MODIFICATIONS"])
         self.assertFalse(app.config["DEBUG_TB_INTERCEPT_REDIRECTS"])
+        self.assertTrue(app.config['BCRYPT_LOG_ROUNDS'] == 4)
 
 
 class TestTestingConfig(TestCase):
@@ -43,6 +44,7 @@ class TestTestingConfig(TestCase):
         self.assertFalse(app.config["DEBUG_TB_ENABLED"])
         self.assertFalse(app.config["SQLALCHEMY_TRACK_MODIFICATIONS"])
         self.assertFalse(app.config["DEBUG_TB_INTERCEPT_REDIRECTS"])
+        self.assertTrue(app.config['BCRYPT_LOG_ROUNDS'] == 4)
 
 
 class TestProductionConfig(TestCase):
@@ -60,6 +62,7 @@ class TestProductionConfig(TestCase):
         self.assertFalse(app.config["DEBUG_TB_ENABLED"])
         self.assertFalse(app.config["SQLALCHEMY_TRACK_MODIFICATIONS"])
         self.assertFalse(app.config["DEBUG_TB_INTERCEPT_REDIRECTS"])
+        self.assertTrue(app.config['BCRYPT_LOG_ROUNDS'] == 13)
 
 
 if __name__ == "__main__":

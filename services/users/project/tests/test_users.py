@@ -21,7 +21,8 @@ class TestUserService(BaseTestCase):
         with self.client:
             response = self.client.post(
                 "/users",
-                data=json.dumps({"username": "a", "email": "a@b.org"}),
+                data=json.dumps({"username": "a", "email": "a@b.org",
+                                "password": "abcd"}),
                 content_type="application/json",
             )
             data = json.loads(response.data.decode())
@@ -31,7 +32,7 @@ class TestUserService(BaseTestCase):
 
     def test_single_user(self):
         """Ensure get single user behaves correctly."""
-        user = add_user("a", "a@b.org")
+        user = add_user("a", "a@b.org", "abcd")
         with self.client:
             response = self.client.get(f"/users/{user.id}")
             data = json.loads(response.data.decode())
@@ -60,8 +61,8 @@ class TestUserService(BaseTestCase):
 
     def test_all_users(self):
         """Ensure get all users behaves correctly."""
-        add_user("a", "a@b.com")
-        add_user("b", "b@c.org")
+        add_user("a", "a@b.com", "abcd")
+        add_user("b", "b@c.org", "abcd")
         with self.client:
             response = self.client.get("/users")
             data = json.loads(response.data.decode())
@@ -76,8 +77,8 @@ class TestUserService(BaseTestCase):
     def test_main_with_users(self):
         """Ensure the main route behaves correctly when users have been
         added to the database."""
-        add_user("a", "a@b.org")
-        add_user("b", "b@c.com")
+        add_user("a", "a@b.org", "abcd")
+        add_user("b", "b@c.com", "abcd")
         with self.client:
             response = self.client.get("/")
             self.assertEqual(response.status_code, 200)
@@ -105,20 +106,38 @@ class TestUserService(BaseTestCase):
             self.assertIn("Invalid payload.", data["message"])
             self.assertIn("fail", data["status"])
 
-    def test_add_user_invalid_json_keys(self):
+    def test_add_user_invalid_json_key_username(self):
         """
         Ensure error is thrown if the JSON object does not have a username key.
         """
         with self.client:
             response = self.client.post(
                 "/users",
-                data=json.dumps({"email": "a@b.org"}),
+                data=json.dumps({"email": "a@b.org", "password": "abcd"}),
                 content_type="application/json",
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
             self.assertIn("Invalid payload.", data["message"])
             self.assertIn("fail", data["status"])
+
+    def test_add_user_invalid_json_key_password(self):
+        """
+        Ensure error is thrown if the JSON object
+        does not have a password key.
+        """
+        with self.client:
+            response = self.client.post(
+                '/users',
+                data=json.dumps(dict(
+                    username='michael',
+                    email='michael@reallynotreal.com')),
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertIn('Invalid payload.', data['message'])
+            self.assertIn('fail', data['status'])
 
     def test_main_add_user(self):
         """
@@ -128,7 +147,8 @@ class TestUserService(BaseTestCase):
             response = self.client.post("/",
                                         data=dict(
                                                 username="a",
-                                                email="a@b.com"
+                                                email="a@b.com",
+                                                password="abcd"
                                         ),
                                         follow_redirects=True)
             self.assertEqual(response.status_code, 200)
@@ -141,12 +161,17 @@ class TestUserService(BaseTestCase):
         with self.client:
             self.client.post(
                 "/users",
-                data=json.dumps({"username": "a", "email": "a@b.org"}),
+                data=json.dumps({
+                                "username": "a",
+                                "email": "a@b.org",
+                                "password": "abcd"}),
                 content_type="application/json",
             )
             response = self.client.post(
                 "/users",
-                data=json.dumps({"username": "a", "email": "a@b.org"}),
+                data=json.dumps({"username": "a",
+                                 "email": "a@b.org",
+                                 "password": "abcd"}),
                 content_type="application/json",
             )
             data = json.loads(response.data.decode())
