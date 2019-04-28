@@ -2,15 +2,7 @@ import json
 import unittest
 
 from project.tests.base import BaseTestCase
-from project import db
-from project.api.models import User
-
-
-def add_user(username, email):
-    user = User(username=username, email=email)
-    db.session.add(user)
-    db.session.commit()
-    return user
+from project.tests.utils import add_user
 
 
 class TestUserService(BaseTestCase):
@@ -29,9 +21,7 @@ class TestUserService(BaseTestCase):
         with self.client:
             response = self.client.post(
                 "/users",
-                data=json.dumps(
-                    {"username": "a", "email": "a@b.org"}
-                ),
+                data=json.dumps({"username": "a", "email": "a@b.org"}),
                 content_type="application/json",
             )
             data = json.loads(response.data.decode())
@@ -135,11 +125,12 @@ class TestUserService(BaseTestCase):
         Ensure a new user can be added to the database via a POST request.
         """
         with self.client:
-            response = self.client.post(
-                "/",
-                data=dict(username="a", email="a@b.com"),
-                follow_redirects=True,
-            )
+            response = self.client.post("/",
+                                        data=dict(
+                                                username="a",
+                                                email="a@b.com"
+                                        ),
+                                        follow_redirects=True)
             self.assertEqual(response.status_code, 200)
             self.assertIn(b"All Users", response.data)
             self.assertNotIn(b"<p>No users!</p>", response.data)
@@ -150,16 +141,12 @@ class TestUserService(BaseTestCase):
         with self.client:
             self.client.post(
                 "/users",
-                data=json.dumps(
-                    {"username": "a", "email": "a@b.org"}
-                ),
+                data=json.dumps({"username": "a", "email": "a@b.org"}),
                 content_type="application/json",
             )
             response = self.client.post(
                 "/users",
-                data=json.dumps(
-                    {"username": "a", "email": "a@b.org"}
-                ),
+                data=json.dumps({"username": "a", "email": "a@b.org"}),
                 content_type="application/json",
             )
             data = json.loads(response.data.decode())
